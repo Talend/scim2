@@ -66,6 +66,14 @@ subprojects {
         }
 
         maven {
+            url 'https://artifacts-zl.talend.com/nexus/content/repositories/snapshots/'
+            credentials {
+                username nexusTalendSnapshotsUsername
+                password nexusTalendSnapshotsPassword
+            }
+        }
+
+        maven {
             url 'https://artifacts-zl.talend.com/nexus/content/groups/public'
         }
     }

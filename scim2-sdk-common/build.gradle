@@ -1,3 +1,7 @@
+plugins {
+    id 'java-library'
+}
+
 test {
     // enable TestNG support (default is JUnit)
     useTestNG()

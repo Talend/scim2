@@ -12,7 +12,7 @@ publishing {
                     username nexusTpsvcDeployUsername
                     password nexusTpsvcDeployPassword
                 }
-                url nexusTpsvcUrl
+                url project.getVersion().toString().contains('SNAPSHOT') ? nexusTalendSnapshotsUrl : nexusTpsvcUrl
             }
         } else {
             mavenLocal()

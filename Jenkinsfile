@@ -39,6 +39,13 @@ pipeline {
     }
   }
 
+  parameters {
+    booleanParam(name: 'PUBLISH_SNAPSHOT', defaultValue: false,
+            description: '''
+                 Do you want to publish a snapshot ?
+               ''')
+  }
+
   environment {
     NEXUS_TPSVC_URL                       = 'https://artifacts-zl.talend.com/nexus/content/repositories/tpsvc'
     NEXUS_TALEND_SNAPSHOTS_URL            = 'https://artifacts-zl.talend.com/nexus/content/repositories/snapshots'
@@ -147,6 +154,24 @@ pipeline {
       post {
         always {
           archiveBuildArtifacts()
+        }
+      }
+    }
+
+    stage('Publish snapshot') {
+      when {
+        not {
+          anyOf {
+            branch "${releaseBranchPrefix}patch"
+            branch "${releaseBranchPrefix}minor"
+            branch "${releaseBranchPrefix}major"
+          }
+        }
+        expression { return params.PUBLISH_SNAPSHOT }
+      }
+      steps {
+        container('talend-tsbi-springboot-builder') {
+          sh "gradle ${BUILD_OPTS} publish"
         }
       }
     }
