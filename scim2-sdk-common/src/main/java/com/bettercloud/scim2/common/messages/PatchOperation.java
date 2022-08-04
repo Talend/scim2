@@ -212,6 +212,9 @@ public abstract class PatchOperation
 
   static final class RemoveOperation extends PatchOperation
   {
+
+    public static final String GROUP_MEMBERS_PATH = "members";
+
     /**
      * Create a new remove patch operation.
      *
@@ -239,10 +242,10 @@ public abstract class PatchOperation
             "path field must not be null for remove operations");
       }
 
-      if (null != value && "members".equalsIgnoreCase(path.toString())) {
+      if (null != value && GROUP_MEMBERS_PATH.equalsIgnoreCase(path.toString())) {
         path = Path.fromString(StreamSupport.stream(value.spliterator(), false)
                 .map(memberNode -> memberNode.get("value").textValue())
-                .collect(Collectors.joining("\" or value eq \"", "members[value eq \"", "\"]")));
+                .collect(Collectors.joining("\" or value eq \"", GROUP_MEMBERS_PATH + "[value eq \"", "\"]")));
         this.setPath(path);
       }
     }
