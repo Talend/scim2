@@ -213,7 +213,7 @@ public abstract class PatchOperation
   static final class RemoveOperation extends PatchOperation
   {
 
-    public static final String GROUP_MEMBERS_PATH = "members";
+    private static final String GROUP_MEMBERS_PATH = "members";
 
     /**
      * Create a new remove patch operation.
