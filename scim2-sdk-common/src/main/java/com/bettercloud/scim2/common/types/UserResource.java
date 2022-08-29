@@ -187,14 +187,6 @@ public class UserResource extends BaseScimResource
       multiValueClass = Photo.class)
   private List<Photo> photos;
 
-  @Attribute(description = "Physical mailing addresses for this User.",
-      isRequired = false,
-      mutability = AttributeDefinition.Mutability.READ_WRITE,
-      returned = AttributeDefinition.Returned.DEFAULT,
-      uniqueness = AttributeDefinition.Uniqueness.NONE,
-      multiValueClass = Address.class)
-  private List<Address> addresses;
-
   @Attribute(description = "A list of groups that the user belongs to, " +
       "either thorough direct membership, nested groups, or dynamically " +
       "calculated.",
@@ -602,28 +594,6 @@ public class UserResource extends BaseScimResource
   }
 
   /**
-   * Retrieves the physical mailing addresses for this User.
-   *
-   * @return The physical mailing addresses for this User.
-   */
-  public List<Address> getAddresses()
-  {
-    return addresses;
-  }
-
-  /**
-   * Specifies the physical mailing addresses for this User.
-   *
-   * @param addresses The physical mailing addresses for this User.
-   * @return This object.
-   */
-  public UserResource setAddresses(final List<Address> addresses)
-  {
-    this.addresses = addresses;
-    return this;
-  }
-
-  /**
    * Retrieves the list of groups that the user belongs to, either thorough
    * direct membership, nested groups, or dynamically calculated.
    *
@@ -812,11 +782,6 @@ public class UserResource extends BaseScimResource
     {
       return false;
     }
-    if (addresses != null ? !addresses.equals(that.addresses) :
-        that.addresses != null)
-    {
-      return false;
-    }
     if (groups != null ? !groups.equals(that.groups) : that.groups != null)
     {
       return false;
@@ -859,7 +824,6 @@ public class UserResource extends BaseScimResource
     result = 31 * result + (phoneNumbers != null ? phoneNumbers.hashCode() : 0);
     result = 31 * result + (ims != null ? ims.hashCode() : 0);
     result = 31 * result + (photos != null ? photos.hashCode() : 0);
-    result = 31 * result + (addresses != null ? addresses.hashCode() : 0);
     result = 31 * result + (groups != null ? groups.hashCode() : 0);
     result = 31 * result + (entitlements != null ? entitlements.hashCode() : 0);
     result = 31 * result + (roles != null ? roles.hashCode() : 0);
