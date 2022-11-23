@@ -5,16 +5,20 @@ apply plugin: 'pmd'
 apply plugin: 'jacoco'
 apply plugin: 'eclipse'
 
+sourceCompatibility = "${javaVersion}"
+targetCompatibility = "${javaVersion}"
+
 compileJava {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
     options.encoding = 'UTF-8'
 }
 
 compileTestJava {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
     options.encoding = 'UTF-8'
+}
+
+// disable *-plain.jar generation by spring-boot
+jar {
+    enabled = false
 }
 
 checkstyle {
@@ -51,6 +55,7 @@ pmd {
     ruleSetFiles = rootProject.files('config/pmd/pmd-ruleset.xml')
     ruleSets = []
     toolVersion = "$pmdVersion"
+    consoleOutput = true
 }
 
 tasks.withType(Test) {
