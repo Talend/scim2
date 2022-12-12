@@ -149,7 +149,7 @@ pipeline {
       }
       steps {
         container('talend-tsbi-springboot-builder') {
-          sh "gradle ${BUILD_OPTS} clean build"
+          sh "./gradlew ${BUILD_OPTS} clean build"
         }
       }
       post {
@@ -172,7 +172,7 @@ pipeline {
       }
       steps {
         container('talend-tsbi-springboot-builder') {
-          sh "gradle ${BUILD_OPTS} publish"
+          sh "./gradlew ${BUILD_OPTS} publish"
         }
       }
     }
@@ -191,7 +191,7 @@ pipeline {
       }
       steps {
         container('talend-tsbi-springboot-builder') {
-          sh "gradle ${BUILD_OPTS} publish reckonTagPush"
+          sh "./gradlew ${BUILD_OPTS} publish reckonTagPush"
           sh "git push --delete origin ${BRANCH_NAME}"
         }
       }
