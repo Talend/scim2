@@ -61,7 +61,7 @@ pipeline {
     BUILD_PROFILE = 'prod'
     BUILD_ENV = 'ci'
     BUILD_OPTS = '--stacktrace'
-    GRADLE_OPTS = '-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Xmx1500m'
+    GRADLE_OPTS = '-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Xmx1500m --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED'
     SERVICE_REPO_PATH = "Talend/scim2"
   }
 
