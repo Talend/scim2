@@ -163,7 +163,7 @@ pipeline {
             }
         }
 
-        stage("Release") {
+        stage("Pre-Release") {
             when {
                 branch releaseBranchPrefix
             }
