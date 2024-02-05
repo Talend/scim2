@@ -154,9 +154,6 @@ pipeline {
                         env.ORG_GRADLE_PROJECT_nexusTalendOpenSourceReleaseUrl      = env.NEXUS_TALEND_OPEN_SOURCE_RELEASE_URL
                         env.ORG_GRADLE_PROJECT_nexusTalendOpenSourceSnapshotUrl     = env.NEXUS_TALEND_OPEN_SOURCE_SNAPSHOT_URL
 
-                        // envs required to publish artifacts
-                        env.ORG_GRADLE_PROJECT_nexusUsername = "${NEXUS_TALEND_USER}"
-                        env.ORG_GRADLE_PROJECT_nexusPassword = "${NEXUS_TALEND_PASSWORD}"
                         env.RECKON_OPTIONS         = '-Preckon.scope=patch'
                     }
                 }
