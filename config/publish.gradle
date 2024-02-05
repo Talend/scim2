@@ -6,11 +6,11 @@ java {
 
 publishing {
     repositories {
-        if (project.hasProperty('nexusDeployUsername')) {
+        if (project.hasProperty('nexusUsername')) {
             maven {
                 credentials {
-                    username nexusDeployUsername
-                    password nexusDeployPassword
+                    username nexusUsername
+                    password nexusPassword
                 }
                 url project.getVersion().toString().contains('SNAPSHOT') ? nexusTalendSnapshotsUrl : nexusUrl
             }
