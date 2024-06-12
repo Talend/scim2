@@ -4,7 +4,7 @@ buildscript {
         tsbiBomVersion = "0.0.13"
         springBootVersion = "3.2.2"
 
-        securityBomVersion = "5.3.0"
+        securityBomVersion = "6.2.0"
 
         checkstyleVersion = "10.3.4"
         pmdVersion = "6.55.0"
@@ -16,7 +16,7 @@ buildscript {
         // workaround for reckon issue with Java 8
         grgitVersion = "5.2.2"
 
-        testngVersion = "7.9.0"
+        testngVersion = "7.10.2"
         jakartaVersion = "6.0.0"
         jakartaValidationVersion = "3.0.2"
 
