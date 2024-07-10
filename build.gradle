@@ -11,7 +11,7 @@ buildscript {
         jacocoVersion = "0.8.11"
         spotbugsVersion = "4.8.1"
         spotbugsPluginVersion = "4.7.5"
-        sonarqubePluginVersion = "5.0.0.4638"
+        sonarqubePluginVersion = "5.1.0.4882"
 
         // workaround for reckon issue with Java 8
         grgitVersion = "5.2.2"
