@@ -4,7 +4,7 @@ buildscript {
         tsbiBomVersion = "0.0.21"
         springBootVersion = "3.3.2"
 
-        securityBomVersion = "6.14.0"
+        securityBomVersion = "6.16.0"
 
         checkstyleVersion = "10.3.4"
         pmdVersion = "6.55.0"
