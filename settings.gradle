@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        reckonVersion="0.18.3"
+        reckonVersion="0.19.1"
     }
 }
 
