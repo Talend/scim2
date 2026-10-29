@@ -66,34 +66,20 @@ subprojects {
     apply from: rootProject.file('config/publish.gradle')
 
     repositories {
-        mavenCentral()
-
         maven {
-            url 'https://artifacts-zl.talend.com/nexus/content/repositories/tpsvc'
+            url 'https://artifactory.datapwn.com/artifactory/maven-central-remote'
             credentials {
-                username nexusUsername
-                password nexusPassword
+                username artifactoryUsername
+                password artifactoryPassword
             }
         }
 
         maven {
-            url 'https://artifacts-zl.talend.com/nexus/content/repositories/releases/'
+            url 'https://maven.pkg.github.com/Talend/global-artifacts'
             credentials {
-                username nexusTalendReleasesUsername
-                password nexusTalendReleasesPassword
+                username githubPackagesUsername
+                password githubPackagesPassword
             }
-        }
-
-        maven {
-            url 'https://artifacts-zl.talend.com/nexus/content/repositories/snapshots/'
-            credentials {
-                username nexusTalendSnapshotsUsername
-                password nexusTalendSnapshotsPassword
-            }
-        }
-
-        maven {
-            url 'https://artifacts-zl.talend.com/nexus/content/groups/public'
         }
     }
 }
