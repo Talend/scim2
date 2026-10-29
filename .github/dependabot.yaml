@@ -1,18 +1,24 @@
 version: 2
 registries:
-  artifacts-zl:
+  global-artifacts:
     type: maven-repository
-    url: https://artifacts-zl.talend.com/nexus
+    url: https://maven.pkg.github.com/Talend/global-artifacts
     # these secrets should be added for Dependabot on each repo
-    username: ${{ secrets.NEXUS_TALEND_USER }}
-    password: ${{ secrets.NEXUS_TALEND_PASSWORD }}
+    username: ${{ secrets.GH_PACKAGES_USER }}
+    password: ${{ secrets.GH_PACKAGES_TOKEN }}
+  maven-central-remote:
+    type: maven-repository
+    url: https://artifactory.datapwn.com/artifactory/maven-central-remote
+    username: ${{ secrets.ARTIFACTORY_USER }}
+    password: ${{ secrets.ARTIFACTORY_PASSWORD }}
 updates:
   - package-ecosystem: "gradle"
     directory: "/"
     allow:
       - dependency-type: "all"
     registries:
-      - artifacts-zl
+      - global-artifacts
+      - maven-central-remote
     schedule:
       interval: "daily"
     open-pull-requests-limit: 100

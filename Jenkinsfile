@@ -13,10 +13,10 @@ def artifactoryCredentials = usernamePassword(
         credentialsId: 'artifactory-datapwn-credentials',
         passwordVariable: 'ARTIFACTORY_TALEND_PASSWORD',
         usernameVariable: 'ARTIFACTORY_TALEND_LOGIN')
-def nexusCredentials = usernamePassword(
-        credentialsId: 'nexus-artifact-zl-credentials',
-        passwordVariable: 'NEXUS_TALEND_PASSWORD',
-        usernameVariable: 'NEXUS_TALEND_USER')
+def githubCredentials = usernamePassword(
+        credentialsId: 'github-credentials',
+        passwordVariable: 'GH_TOKEN',
+        usernameVariable: 'GITHUB_USER')
 
 def gradlew(String... args) {
     sh "./gradlew -s --max-workers=2 --no-daemon ${args.join(' ')}"
@@ -84,14 +84,7 @@ pipeline {
     }
 
     environment {
-        NEXUS_TPSVC_URL                       = 'https://artifacts-zl.talend.com/nexus/content/repositories/tpsvc'
-        NEXUS_TALEND_SNAPSHOTS_URL            = 'https://artifacts-zl.talend.com/nexus/content/repositories/snapshots'
-        NEXUS_TALEND_RELEASES_URL             = 'https://artifacts-zl.talend.com/nexus/content/repositories/releases'
-        NEXUS_TALEND_OS_RELEASE_URL           = 'https://artifacts-zl.talend.com/nexus/content/repositories/TalendOpenSourceRelease'
-        NEXUS_TALEND_OPEN_SOURCE_RELEASE_URL  = 'https://artifacts-zl.talend.com/nexus/content/repositories/TalendOpenSourceRelease'
-        NEXUS_TALEND_OPEN_SOURCE_SNAPSHOT_URL = 'https://artifacts-zl.talend.com/nexus/content/repositories/TalendOpenSourceSnapshot'
-
-        PROJECT_TEAM           = 'platform-services'
+        PROJECT_TEAM          = 'platform-services'
         GIT_USER               = 'build-talend-tpsvc'
         GIT_EMAIL              = 'build-talend-tpsvc@talend.com'
         GIT_CREDS              = credentials('github-credentials')
@@ -133,26 +126,14 @@ pipeline {
 
         stage('Set Gradle options') {
             steps {
-                withCredentials([nexusCredentials]) {
+                withCredentials([githubCredentials, artifactoryCredentials]) {
                     script {
                         // inject required credentials (then we don't need the gradle settings file)
-                        env.ORG_GRADLE_PROJECT_nexusUsername = "${NEXUS_TALEND_USER}"
-                        env.ORG_GRADLE_PROJECT_nexusPassword = "${NEXUS_TALEND_PASSWORD}"
-                        env.ORG_GRADLE_PROJECT_nexusUrl      = env.NEXUS_TPSVC_URL
+                        env.ORG_GRADLE_PROJECT_githubPackagesUsername = "${GITHUB_USER}"
+                        env.ORG_GRADLE_PROJECT_githubPackagesPassword = "${GH_TOKEN}"
 
-                        env.ORG_GRADLE_PROJECT_nexusTalendSnapshotsUsername = "${NEXUS_TALEND_USER}"
-                        env.ORG_GRADLE_PROJECT_nexusTalendSnapshotsPassword = "${NEXUS_TALEND_PASSWORD}"
-                        env.ORG_GRADLE_PROJECT_nexusTalendSnapshotsUrl      = env.NEXUS_TALEND_SNAPSHOTS_URL
-
-                        env.ORG_GRADLE_PROJECT_nexusTalendReleasesUsername = "${NEXUS_TALEND_USER}"
-                        env.ORG_GRADLE_PROJECT_nexusTalendReleasesPassword = "${NEXUS_TALEND_PASSWORD}"
-                        env.ORG_GRADLE_PROJECT_nexusTalendReleasesUrl      = env.NEXUS_TALEND_RELEASES_URL
-
-                        env.ORG_GRADLE_PROJECT_nexusTalendOpenSourceReleaseUsername = "${NEXUS_TALEND_USER}"
-                        env.ORG_GRADLE_PROJECT_nexusTalendOpenSourceReleasePassword = "${NEXUS_TALEND_PASSWORD}"
-                        env.ORG_GRADLE_PROJECT_nexusTalendOSReleasesUrl             = env.NEXUS_TALEND_OS_RELEASE_URL
-                        env.ORG_GRADLE_PROJECT_nexusTalendOpenSourceReleaseUrl      = env.NEXUS_TALEND_OPEN_SOURCE_RELEASE_URL
-                        env.ORG_GRADLE_PROJECT_nexusTalendOpenSourceSnapshotUrl     = env.NEXUS_TALEND_OPEN_SOURCE_SNAPSHOT_URL
+                        env.ORG_GRADLE_PROJECT_artifactoryUsername = "${ARTIFACTORY_TALEND_LOGIN}"
+                        env.ORG_GRADLE_PROJECT_artifactoryPassword = "${ARTIFACTORY_TALEND_PASSWORD}"
 
                         env.RECKON_OPTIONS         = '-Preckon.scope=patch'
                     }

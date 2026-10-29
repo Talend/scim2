@@ -6,13 +6,13 @@ java {
 
 publishing {
     repositories {
-        if (project.hasProperty('nexusUsername')) {
+        if (project.hasProperty('githubPackagesUsername')) {
             maven {
                 credentials {
-                    username nexusUsername
-                    password nexusPassword
+                    username githubPackagesUsername
+                    password githubPackagesPassword
                 }
-                url project.getVersion().toString().contains('SNAPSHOT') ? nexusTalendSnapshotsUrl : nexusUrl
+                url 'https://maven.pkg.github.com/Talend/global-artifacts'
             }
         } else {
             mavenLocal()
