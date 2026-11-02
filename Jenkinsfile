@@ -192,15 +192,12 @@ pipeline {
 
         stage("Sonarqube analysis") {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'sonar-credentials',
-                        passwordVariable: 'SONAR_PASSWORD', usernameVariable: 'SONAR_LOGIN')]) {
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     gradlew("sonar",
                             "-x test",
-                            "-Dsonar.login='$SONAR_LOGIN'",
-                            "-Dsonar.password='$SONAR_PASSWORD'",
+                            "-Dsonar.token='$SONAR_TOKEN'",
                             "-Dsonar.projectVersion='$IMAGE_VERSION'",
                             "-Dsonar.analysisCache.enabled=false",
-                            "-Dsonar.host.url=https://sonar.datapwn.com",
                             "-Dsonar.projectKey=${PROJECT_TEAM}:${getServiceName(decodedJobName)}",
                             "-Dsonar.projectName=TPSVC_${getServiceName(decodedJobName)}"
                             , env.RECKON_OPTIONS)
