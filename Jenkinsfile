@@ -196,6 +196,7 @@ pipeline {
                     gradlew("sonar",
                             "-x test",
                             "-Dsonar.token='$SONAR_TOKEN'",
+                            "-Dsonar.host.url=https://sonar.rnd-ci.cloud.talend.com",
                             "-Dsonar.projectVersion='$IMAGE_VERSION'",
                             "-Dsonar.analysisCache.enabled=false",
                             "-Dsonar.projectKey=${PROJECT_TEAM}:${getServiceName(decodedJobName)}",
