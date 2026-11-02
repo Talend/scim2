@@ -8,28 +8,23 @@ set -x
 #################################################################################################################################
 
 netrcFile="$1"
-nexusReleasesUrl="$2"
+globalArtifactsUrl="$2"
 artifactoryUrl="$3"
-nexusUrl="$4"
 
 if [ -z "$netrcFile" ]; then
   echo '.netrc file path has to be the first argument.'
   echo 'The file should contain two lines like this:'
-  echo 'machine artifacts-zl.talend.com login <nexus-username> password <nexus-password>'
+  echo 'machine maven.pkg.github.com login <github-username> password <github-token>'
   echo 'machine artifactory.datapwn.com login <artifactory-username> password <artifactory-password>'
   exit 2
 fi
 
-if [ -z "$nexusReleasesUrl" ]; then
-  nexusReleasesUrl="https://artifacts-zl.talend.com/nexus/content/repositories/releases"
+if [ -z "$globalArtifactsUrl" ]; then
+  globalArtifactsUrl="https://maven.pkg.github.com/Talend/global-artifacts"
 fi
 
 if [ -z "$artifactoryUrl" ]; then
   artifactoryUrl="https://artifactory.datapwn.com/artifactory"
-fi
-
-if [ -z "$nexusUrl" ]; then
-  nexusUrl="https://artifacts-zl.talend.com/nexus/content/repositories/tpsvc"
 fi
 
 # exit status 0 means the script has updated the version
@@ -41,9 +36,9 @@ exitStatus=1
 #################################################################################################################################
 
 # Params
-#   $1 - Nexus Repo
-#   $2 - Artifact path in Nexus
-function getLatestVersionFromNexus() {
+#   $1 - Maven Repo
+#   $2 - Artifact path in Maven repo
+function getLatestVersionFromMavenRepo() {
   curl -L -s --netrc-file "$netrcFile" "$1/$2/maven-metadata.xml" | grep -F '<release>' | grep -o '[0-9.-]*'
 }
 
@@ -70,18 +65,18 @@ function updateGradleProperties() {
 # Params
 #   $1 - Dependency name (for example "Platform SDK")
 #   $2 - Property name (for example "platformSdkVersion")
-#   $3 - Nexus repo for the dependency (for example "$nexusUrl")
-#   $4 - Dependency path in Nexus repo (for example, "org/talend/platform/sdk/scim-client")
+#   $3 - Maven repo for the dependency (for example "$globalArtifactsUrl")
+#   $4 - Dependency path in Maven repo (for example, "org/talend/platform/sdk/scim-client")
 function updateDependencyIfNecessary() {
   dependencyName="$1"
   propertyName="$2"
-  nexusRepo="$3"
-  nexusDependencyPath="$4"
+  mavenRepo="$3"
+  mavenDependencyPath="$4"
 
   currentDependencyVersion=$(getVersionFromGradleProperties "$propertyName")
 
   if [ -n "$currentDependencyVersion" ] ; then
-    latestDependencyVersion=$(getLatestVersionFromNexus "$nexusRepo" "$nexusDependencyPath")
+    latestDependencyVersion=$(getLatestVersionFromMavenRepo "$mavenRepo" "$mavenDependencyPath")
     if [ -z "$latestDependencyVersion" ] ; then
       echo "Unable to get latest $dependencyName version"
       exit 2
@@ -120,14 +115,14 @@ function getCurrentTsbiBomVersion() {
 }
 
 # Params
-#   $1 - Nexus Repo
+#   $1 - Maven Repo
 #   $2 - Spring Boot kind (for example, 2.3)
 function getLatestTsbiBomVersion() {
-  getLatestVersionFromNexus "$1" "org/talend/tsbi/java/springboot-bom/$2"
+  getLatestVersionFromMavenRepo "$1" "org/talend/tsbi/java/springboot-bom/$2"
 }
 
 # Params
-#   $1 - Nexus Repo
+#   $1 - Maven Repo
 #   $2 - Spring Boot kind (for example, 2.3)
 #   $3 - TSBI POM version
 function getTsbiBom() {
@@ -144,7 +139,7 @@ if [ -z "$currentTsbiBomVersion" ]; then
   exit 1
 fi
 
-latestTsbiVersion=$(getLatestTsbiBomVersion "$nexusReleasesUrl" "$currentTsbiSbKind")
+latestTsbiVersion=$(getLatestTsbiBomVersion "$globalArtifactsUrl" "$currentTsbiSbKind")
 
 if [ -z "$latestTsbiVersion" ]; then
   echo "Unable to get latest TSBI BOM version"
@@ -156,7 +151,7 @@ echo "Current TSBI BOM: $currentTsbiBomVersion, Latest: $latestTsbiVersion"
 if [ "$currentTsbiBomVersion" != "$latestTsbiVersion" ]; then
   echo "Getting latest TSBI BOM ..."
 
-  latestTsbiBom=$(getTsbiBom "$nexusReleasesUrl" "$currentTsbiSbKind" "$latestTsbiVersion")
+  latestTsbiBom=$(getTsbiBom "$globalArtifactsUrl" "$currentTsbiSbKind" "$latestTsbiVersion")
 
   if [ -z "$latestTsbiBom" ]; then
     echo "Unable to get TSBI BOM"
@@ -182,10 +177,10 @@ fi
 #################################################################################################################################
 ### Updating misc dependencies
 
-updateDependencyIfNecessary "Platform SDK" "platformSdkVersion" "$nexusUrl" "org/talend/platform/sdk/scim-client"
+updateDependencyIfNecessary "Platform SDK" "platformSdkVersion" "$globalArtifactsUrl" "org/talend/platform/sdk/scim-client"
 exitStatus=$((exitStatus & $?))
 
-updateDependencyIfNecessary "Security BOM" "securityBomVersion" "$nexusUrl" "org/talend/pscommons/security-bom"
+updateDependencyIfNecessary "Security BOM" "securityBomVersion" "$globalArtifactsUrl" "org/talend/pscommons/security-bom"
 exitStatus=$((exitStatus & $?))
 
 #################################################################################################################################
